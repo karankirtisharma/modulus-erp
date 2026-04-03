@@ -1,20 +1,57 @@
-<div align="center">
-<img width="1200" height="475" alt="GHBanner" src="https://github.com/user-attachments/assets/0aa67016-6eaf-458a-adb2-6e31a0763ed6" />
-</div>
+# 🎨 MODULUS ERP - Frontend Application
 
-# Run and deploy your AI Studio app
+**Modern React + Vite Frontend for MODULUS ERP**
 
-This contains everything you need to run your app locally.
+The frontend provides localized dashboards for system roles, real-time analytics, and secure session management.
 
-View your app in AI Studio: https://ai.studio/apps/06245cca-0e0c-4fda-a70e-b3d76937b460
+---
 
-## Run Locally
+## 🚀 Getting Started
 
-**Prerequisites:**  Node.js
+1. **Install dependencies:**
+   ```bash
+   npm install
+   ```
 
+2. **Configure environment:**
+   By default, the Vite server will proxy API requests to `http://localhost:5000/api`.
 
-1. Install dependencies:
-   `npm install`
-2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
-3. Run the app:
-   `npm run dev`
+3. **Start Development Server:**
+   ```bash
+   npm run dev # vite --port=3000 --host=0.0.0.0
+   ```
+
+---
+
+## 🛠️ Features
+
+### 🏢 Modular Component Architecture
+Built with reusable components and a clean directory structure:
+- **`src/components/ui/`**: Reusable interface components (Stats cards, Badges, Modals).
+- **`src/pages/`**: Role-scoped dashboards for Admins, Managers, and Employees.
+- **`src/contexts/`**: Global authentication state and token management.
+
+### 🛡️ Secure Navigation (AuthGuard)
+- **ProtectedRoute**: Automatically detects user authentication and role, redirecting unauthorized users back to the login page.
+
+### 🎨 Design System
+- Styled with **Tailwind CSS**.
+- Icons from **Lucide React**.
+- Animations powered by **Framer Motion**.
+
+---
+
+## 📁 Frontend Structure
+
+```text
+├── src
+│   ├── api         # Axios instance and interceptors
+│   ├── components  # UI and Layout components
+│   ├── contexts    # AuthContext & global state
+│   ├── pages       # Role-based dashboard implementations
+│   └── routes      # Private/Public route definitions
+```
+
+---
+
+**MODULUS ERP Frontend** · Enterprise Resource Planning UX
