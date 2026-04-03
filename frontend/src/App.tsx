@@ -1,45 +1,86 @@
-/**
- * @license
- * SPDX-License-Identifier: Apache-2.0
- */
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { AuthProvider } from './contexts/AuthContext';
+import ProtectedRoute from './components/guards/ProtectedRoute';
+import RoleProtectedRoute from './components/guards/RoleProtectedRoute';
+import AppLayout from './components/layout/AppLayout';
 
-import React, { useState } from 'react';
-import Sidebar from './components/Sidebar';
-import ManagementPage from './components/ManagementPage';
-import DashboardPage from './components/DashboardPage';
-import AnalyticsPage from './components/AnalyticsPage';
+// Pages
+import LoginPage from './pages/LoginPage';
+import AdminDashboard from './pages/admin/AdminDashboard';
+import EmployeeManagementPage from './pages/admin/EmployeeManagementPage';
+import TaskManagementPage from './pages/admin/TaskManagementPage';
+import LeaveManagementPage from './pages/admin/LeaveManagementPage';
+import AnalyticsPage from './pages/admin/AnalyticsPage';
+import ManagerDashboard from './pages/manager/ManagerDashboard';
+import ManagerTasksPage from './pages/manager/ManagerTasksPage';
+import ManagerLeavesPage from './pages/manager/ManagerLeavesPage';
+import EmployeeDashboard from './pages/employee/EmployeeDashboard';
+import EmployeeTasksPage from './pages/employee/EmployeeTasksPage';
+import EmployeeLeavesPage from './pages/employee/EmployeeLeavesPage';
 
 export default function App() {
-  const [activePage, setActivePage] = useState('Dashboard');
-
   return (
-    <div className="min-h-screen bg-[#e0e5ec] flex items-center justify-center p-4 sm:p-8 relative overflow-hidden font-sans text-gray-800">
-      {/* Background Image */}
-      <div
-        className="absolute inset-0 z-0"
-        style={{
-          backgroundImage: 'url("https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=2564&auto=format&fit=crop")',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          filter: 'blur(10px) opacity(0.6)',
-          transform: 'scale(1.05)'
-        }}
-      />
+    <BrowserRouter>
+      <AuthProvider>
+        <Routes>
+          {/* Public */}
+          <Route path="/login" element={<LoginPage />} />
 
-      {/* Floating Glass Shapes */}
-      <div className="absolute top-[10%] left-[20%] w-32 h-32 bg-white/20 backdrop-blur-3xl rounded-full shadow-[0_8px_32px_0_rgba(255,255,255,0.2)] border border-white/30 z-0 animate-pulse" />
-      <div className="absolute bottom-[5%] left-[45%] w-48 h-48 bg-white/20 backdrop-blur-3xl rounded-full shadow-[0_8px_32px_0_rgba(255,255,255,0.2)] border border-white/30 z-0 animate-pulse" style={{ animationDelay: '1s' }} />
-      <div className="absolute top-[15%] right-[15%] w-24 h-24 bg-white/20 backdrop-blur-3xl rounded-full shadow-[0_8px_32px_0_rgba(255,255,255,0.2)] border border-white/30 z-0 animate-pulse" style={{ animationDelay: '2s' }} />
+          {/* Admin Routes */}
+          <Route
+            path="/admin"
+            element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={['admin']}>
+                  <AppLayout />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<AdminDashboard />} />
+            <Route path="employees" element={<EmployeeManagementPage />} />
+            <Route path="tasks" element={<TaskManagementPage />} />
+            <Route path="leaves" element={<LeaveManagementPage />} />
+            <Route path="analytics" element={<AnalyticsPage />} />
+          </Route>
 
-      {/* Main Glass Container */}
-      <div className="relative z-10 w-full max-w-[1600px] h-[90vh] min-h-[800px] bg-white/30 backdrop-blur-2xl border border-white/40 rounded-[40px] shadow-[0_8px_32px_0_rgba(31,38,135,0.1)] flex overflow-hidden p-6 gap-6">
-        <Sidebar activePage={activePage} onPageChange={setActivePage} />
-        <main className="flex-1 flex flex-col gap-6 overflow-hidden">
-          {activePage === 'Dashboard' && <DashboardPage />}
-          {activePage === 'Management' && <ManagementPage />}
-          {activePage === 'Analytics' && <AnalyticsPage />}
-        </main>
-      </div>
-    </div>
+          {/* Manager Routes */}
+          <Route
+            path="/manager"
+            element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={['manager']}>
+                  <AppLayout />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<ManagerDashboard />} />
+            <Route path="tasks" element={<ManagerTasksPage />} />
+            <Route path="leaves" element={<ManagerLeavesPage />} />
+          </Route>
+
+          {/* Employee Routes */}
+          <Route
+            path="/employee"
+            element={
+              <ProtectedRoute>
+                <RoleProtectedRoute allowedRoles={['employee']}>
+                  <AppLayout />
+                </RoleProtectedRoute>
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<EmployeeDashboard />} />
+            <Route path="tasks" element={<EmployeeTasksPage />} />
+            <Route path="leaves" element={<EmployeeLeavesPage />} />
+          </Route>
+
+          {/* Default redirect */}
+          <Route path="*" element={<Navigate to="/login" replace />} />
+        </Routes>
+      </AuthProvider>
+    </BrowserRouter>
   );
 }
